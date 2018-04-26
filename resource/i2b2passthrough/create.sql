@@ -16,3 +16,5 @@ INSERT INTO `resource_parameters` (`id`, `value`, `name`)
 VALUES
 	(@resourceId, @resourceName, 'resourceName'),
 	(@resourceId, @resourceURL, 'resourceURL');
+
+commit;
