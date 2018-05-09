@@ -6,7 +6,7 @@ set @userName = '{{userName}}';
 set @password = '{{password}}';
 set @ignoreCertificate = 'false';
 
-set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2.I2B2XMLResourceImplementation';
+set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2.I2B2XMLOnlyCountRI';
 set @resourceOntology = 'TREE';
 
 
