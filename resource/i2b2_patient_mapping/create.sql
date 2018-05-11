@@ -5,7 +5,7 @@ set @domain = '{{domain}}';
 set @userName = '{{userName}}';
 set @password = '{{password}}';
 set @ignoreCertificate = 'false';
-set @returnFullSet = 'false';
+set @sourceWhiteList = 'HIVE'
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2.I2B2XMLPatientMappingRI';
 set @resourceOntology = 'TREE';
@@ -52,7 +52,7 @@ insert into resource_parameters(id, name, value) values(@resourceId, 'password',
 insert into resource_parameters(id, name, value) values(@resourceId, 'ignoreCertificate', @ignoreCertificate);
 insert into resource_parameters(id, name, value) values(@resourceId, 'clientId', @auth0ClientId);
 insert into resource_parameters(id, name, value) values(@resourceId, 'namespace', @auth0Domain);
-insert into resource_parameters(id, name, value) values(@resourceId, 'returnFullSet', @returnFullSet);
+insert into resource_parameters(id, name, value) values(@resourceId, 'sourceWhiteList', @sourceWhiteList);
 
 -- INSERT RESOURCE DATATYEPS
 insert into Resource_dataTypes(Resource_id, datatypes) values(@resourceId, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:DATETIME');
