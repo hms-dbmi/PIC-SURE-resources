@@ -29,12 +29,12 @@ insert into Resource_PredicateType(Resource_Id, supportedPredicates_id) values(@
 
 -- SET THE FIELDS
 set @field_id = (select NULLIF(max(id), 0) from Field) + 1;
-insert into Field(id, description, name, path, relationship, required) values(@field_id, '1st group of samples for comparison', 'project_type_A', 'project_type_A', null, 1);
+insert into Field(id, description, name, path, relationship, required) values(@field_id, '[mandatory for analyze_genes_rest/analyze_variants_rest] 1st group of samples for comparison', 'project_type_A', 'project_type_A', null, 0);
 insert into Field_dataTypes(Field_id, dataTypes) values(@field_id, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:STRING');
 insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicate_type_id, @field_id);
 
 set @field_id = (select NULLIF(max(id), 0) from Field) + 1;
-insert into Field(id, description, name, path, relationship, required) values(@field_id, '2st group of samples for comparison', 'project_type_B', 'project_type_B', null, 1);
+insert into Field(id, description, name, path, relationship, required) values(@field_id, '[mandatory for analyze_genes_rest/analyze_variants_rest] 2st group of samples for comparison', 'project_type_B', 'project_type_B', null, 0);
 insert into Field_dataTypes(Field_id, dataTypes) values(@field_id, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:STRING');
 insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicate_type_id, @field_id);
 
@@ -200,4 +200,19 @@ insert into Field_permittedValues(Field_Id, permittedValues) values(@field_id, '
 insert into Field_permittedValues(Field_Id, permittedValues) values(@field_id, 'homozygous');
 insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicate_type_id, @field_id);
 
+set @field_id = (select NULLIF(max(id), 0) from Field) + 1;
+insert into Field(id, description, name, path, relationship, required) values(@field_id, '[mandatory for query_rest] Type of query. Specify whether the request is about genes or variants.', 'qtype', 'qtype', null, 0);
+insert into Field_dataTypes(Field_id, dataTypes) values(@field_id, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:STRING');
+insert into Field_permittedValues(Field_Id, permittedValues) values(@field_id, 'genes');
+insert into Field_permittedValues(Field_Id, permittedValues) values(@field_id, 'variants');
+insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicate_type_id, @field_id);
 
+set @field_id = (select NULLIF(max(id), 0) from Field) + 1;
+insert into Field(id, description, name, path, relationship, required) values(@field_id, '[mandatory if qtype is ‘genes’]  List of gene symbols. Can be empty only if phenotype is specified.', 'gqueries', 'gqueries', null, 0);
+insert into Field_dataTypes(Field_id, dataTypes) values(@field_id, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:ARRAY');
+insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicate_type_id, @field_id);
+
+set @field_id = (select NULLIF(max(id), 0) from Field) + 1;
+insert into Field(id, description, name, path, relationship, required) values(@field_id, '[mandatory if qtype is ‘variants’] List of variants**. Can not be empty.', 'vqueries', 'vqueries', null, 0);
+insert into Field_dataTypes(Field_id, dataTypes) values(@field_id, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:ARRAY');
+insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicate_type_id, @field_id);
