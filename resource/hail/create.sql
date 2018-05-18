@@ -1,5 +1,5 @@
-set @resourceName = '{{ resourceName }}';
-set @resourceURL = '{{ resourceURL}}';
+set @resourceName = IFNULL(@resourceName,'{{ resourceName }}');
+set @resourceURL = IFNULL(@resourceURL,'{{ resourceURL}}');
 
 -- SET THE RESOURCE VARIABLE
 set @resourceId = (select IFNULL(max(id), 1) from Resource) + 1;

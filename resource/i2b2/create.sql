@@ -1,9 +1,9 @@
 -- Set the resource parameters
-set @resourceName = '{{resourceName}}';
-set @resourceURL = '{{resourceURL}}';
-set @domain = '{{domain}}';
-set @userName = '{{userName}}';
-set @password = '{{password}}';
+set @resourceName = IFNULL(@resourceName,'{{resourceName}}');
+set @resourceURL = IFNULL(@resourceURL,'{{resourceURL}}');
+set @domain = IFNULL(@domain,'{{domain}}');
+set @userName = IFNULL(@userName,'{{userName}}');
+set @password = IFNULL(@password,'{{password}}');
 set @ignoreCertificate = 'false';
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2.I2B2XMLResourceImplementation';

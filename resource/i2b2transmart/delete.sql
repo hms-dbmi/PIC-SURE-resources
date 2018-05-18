@@ -1,4 +1,4 @@
-set @resourceName = '{{ resourceName }}';
+set @resourceName = IFNULL(@resourceName,'{{ resourceName }}');
 SET FOREIGN_KEY_CHECKS = 0;
 
 DELETE FROM `PredicateType_dataTypes` WHERE PredicateType_id IN (SELECT supportedPredicates_id FROM resource_predicatetype WHERE resource_id IN (SELECT id FROM resource WHERE NAME = @resourceName));

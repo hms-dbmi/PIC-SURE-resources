@@ -1,11 +1,11 @@
 
-set @resourceName = '{{ resourceName }}';
+set @resourceName = IFNULL(@resourceName,'{{ resourceName }}');
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.scidb.SciDBResourceImplementation';
-set @resourceURL = '{{ scidb_url }}';
+set @resourceURL = IFNULL(@resourceURL,'{{ scidb_url }}');
 
-set @resourceUsername = '{{ username }}';
-set @resourcePassword = '{{ password }}';
+set @resourceUsername = IFNULL(@resourceUsername,'{{ username }}');
+set @resourcePassword = IFNULL(@resourcePassword,'{{ password }}');
 
 -- SET THE RESOURCE VARIABLE
 set @resourceId = (select IFNULL(max(id), 1) from Resource) + 1;
@@ -17,11 +17,11 @@ insert into resource_parameters(id, name, value) values(@resourceId, 'resourceNa
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @resourceURL);
 insert into resource_parameters(id, name, value) values(@resourceId, 'username', @resourceUsername);
 insert into resource_parameters(id, name, value) values(@resourceId, 'password', @resourcePassword);
-	
+
 -- SET THE RESOURCE PREDICATES
 set @predicatetype_AFL = (select IFNULL(max(id), 1) from PredicateType) + 1;
 insert into PredicateType(id, defaultPredicate, description, displayName, name) values(@predicatetype_AFL, 0, 'iQuery', 'AFL Query', 'AFL');
-	
+
 -- SET THE FIELDS
 set @field_IQUERY = (select IFNULL(max(id), 1) from Field) + 1;
 insert into Field(id, description, name, path, relationship, required) values(@field_IQUERY, 'iQuery', 'iQuery query string', 'IQUERY', null, 1);
