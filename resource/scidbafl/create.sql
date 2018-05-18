@@ -1,5 +1,5 @@
 -- SET THE RESOURCE PARAMETERS
-set @resourceName = IFNULL(@resourceName,'{{ resourceName }}');
+set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{ resourceName }}', @resourceName);
 
 -- Set the resource variables
 set @resourceId = (select IF(id is NULL,0,max(id)) from Resource) + 1;

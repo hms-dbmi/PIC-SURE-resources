@@ -1,8 +1,8 @@
 -- SET THE RESOURCE PARAMETERS
-set @resourceName = IFNULL(@resourceName,'{{gnome_resource_name}}');
-set @resourceURL = IFNULL(@resourceURL,'{{gnome_resource_url}}');
-set @userName = IFNULL(@userName,'{{gnome_user_name}}');
-set @password = IFNULL(@password,'{{gnome_password}}');
+set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{gnome_resource_name}}', @resourceName);
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', '{{gnome_resource_url}}', @resourceURL);
+set @userName = IF( IFNULL(@userName, '') = '', '{{gnome_user_name}}', @userName);
+set @password = IF( IFNULL(@password, '') = '', '{{gnome_password}}', @password);
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.gnome.GNomeResourceImplementation';
 set @resourceOntology = 'TREE';
 

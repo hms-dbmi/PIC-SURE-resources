@@ -1,11 +1,11 @@
 
-set @resourceName = IFNULL(@resourceName,'{{ resourceName }}');
+set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{ resourceName }}', @resourceName);
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.scidb.SciDBResourceImplementation';
-set @resourceURL = IFNULL(@resourceURL,'{{ scidb_url }}');
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', '{{ scidb_url }}', @resourceURL);
 
-set @userName = IFNULL(@userName,'{{ username }}');
-set @password = IFNULL(@password,'{{ password }}');
+set @userName = IF( IFNULL(@userName, '') = '', '{{ username }}', @userName);
+set @password = IF( IFNULL(@password, '') = '', '{{ password }}', @password);
 
 -- SET THE RESOURCE VARIABLE
 set @resourceId = (select IFNULL(max(id), 1) from Resource) + 1;

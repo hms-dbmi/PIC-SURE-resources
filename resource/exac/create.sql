@@ -1,6 +1,6 @@
 -- Set the resource parameters
-set @resourceName = IFNULL(@resourceName,'{{exacresourcename.msg}}');
-set @resourceURL = IFNULL(@resourceURL,'{{exacresourceurl.msg}}');
+set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{exacresourcename.msg}}', @resourceName);
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', '{{exacresourceurl.msg}}', @resourceURL);
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.exac.EXACResourceImplementation';
 set @resourceOntology = 'TREE';
 
