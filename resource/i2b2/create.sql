@@ -48,7 +48,6 @@ insert into Resource(id, implementingInterface, name, ontologyType) values(@reso
 -- INSERT THE RESOURCE PARAMERTERS
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceName', @resourceName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @resourceURL);
-insert into resource_parameters(id, name, value) values(@resourceId, 'transmartURL', @transmartURL);
 insert into resource_parameters(id, name, value) values(@resourceId, 'domain', @domain);
 insert into resource_parameters(id, name, value) values(@resourceId, 'username', @userName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'password', @password);

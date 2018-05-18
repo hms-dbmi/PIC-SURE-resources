@@ -1,5 +1,8 @@
 -- SET THE RESOURCE PARAMETERS
 set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{ resourceName }}', @resourceName);
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', '{{ scidb_url }}', @resourceURL);
+set @userName = IF( IFNULL(@userName, '') = '', '{{ username }}', @userName);
+set @password = IF( IFNULL(@password, '') = '', '{{ password }}', @password)
 
 -- Set the resource variables
 set @resourceId = (select IF(id is NULL,0,max(id)) from Resource) + 1;
@@ -11,9 +14,9 @@ insert into Resource(id, implementingInterface, name, ontologyType) values(@reso
 
 -- INSERT THE RESOURCE PARAMERTERS
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceName', @resourceName);
-insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @sciDBHost);
-insert into resource_parameters(id, name, value) values(@resourceId, 'username', @sciDBUser);
-insert into resource_parameters(id, name, value) values(@resourceId, 'password', @sciDBPassword);
+insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @resourceURL);
+insert into resource_parameters(id, name, value) values(@resourceId, 'username', @userName);
+insert into resource_parameters(id, name, value) values(@resourceId, 'password', @password);
 
 -- SET THE RESOURCE PREDICATES
 set @predicatetype_AFL = (select max(id) from PredicateType) + 1;
