@@ -9,7 +9,7 @@ set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.scidb.Sc
 -- SET THE RESOURCE VARIABLE
 set @resourceId = (select IFNULL(max(id), 1) from Resource) + 1;
 insert into Resource(id, implementingInterface, name, ontologyType) VALUES
-  (@resourceId, @resourceInterfaceClass, @resourceName, 'TREE');
+  (@resourceId, @resourceImplementingInterface, @resourceName, 'TREE');
 
 -- INSERT THE RESOURCE PARAMERTERS
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceName', @resourceName);

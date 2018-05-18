@@ -52,6 +52,7 @@ insert into resource_parameters(id, name, value) values(@resourceId, 'domain', @
 insert into resource_parameters(id, name, value) values(@resourceId, 'username', @userName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'password', @password);
 insert into resource_parameters(id, name, value) values(@resourceId, 'ignoreCertificate', @ignoreCertificate);
+-- TODO: should these be paramterized? - Andre
 insert into resource_parameters(id, name, value) values(@resourceId, 'clientId', @auth0ClientId);
 insert into resource_parameters(id, name, value) values(@resourceId, 'namespace', @auth0Domain);
 
