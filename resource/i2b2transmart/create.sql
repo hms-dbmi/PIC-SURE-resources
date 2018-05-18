@@ -10,11 +10,11 @@ set @domain = IF( IFNULL(@domain, '') = '', 'i2b2demo', @domain);
 -- parameter, i2b2 user
 set @userName = IF( IFNULL(@userName, '') = '', 'demo', @userName);
 -- parameter, i2b2 user password
-set @password = IF( IFNULL(@password, '') = '', 'demouser', @password)
+set @password = IF( IFNULL(@password, '') = '', 'demouser', @password);
 -- parameter, auth0 Client ID
-set @auth0ClientId = IF( IFNULL(@auth0ClientId, '') = '', '{{auth0clientid}}', @auth0ClientId)
+set @auth0ClientId = IF( IFNULL(@auth0ClientId, '') = '', '{{auth0clientid}}', @auth0ClientId);
 -- paramter, auth0 Domain
-set @auth0Domain = IF( IFNULL(@auth0Domain, '') = '', '{{auth0domain}}', @auth0Domain)
+set @auth0Domain = IF( IFNULL(@auth0Domain, '') = '', '{{auth0domain}}', @auth0Domain);
 
 set @ignoreCertificate = 'false';
 
