@@ -4,8 +4,8 @@ set @resourceName = IFNULL(@resourceName,'{{ resourceName }}');
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.scidb.SciDBResourceImplementation';
 set @resourceURL = IFNULL(@resourceURL,'{{ scidb_url }}');
 
-set @resourceUsername = IFNULL(@resourceUsername,'{{ username }}');
-set @resourcePassword = IFNULL(@resourcePassword,'{{ password }}');
+set @userName = IFNULL(@userName,'{{ username }}');
+set @password = IFNULL(@password,'{{ password }}');
 
 -- SET THE RESOURCE VARIABLE
 set @resourceId = (select IFNULL(max(id), 1) from Resource) + 1;
@@ -15,8 +15,8 @@ insert into Resource(id, implementingInterface, name, ontologyType) VALUES
 -- INSERT THE RESOURCE PARAMERTERS
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceName', @resourceName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @resourceURL);
-insert into resource_parameters(id, name, value) values(@resourceId, 'username', @resourceUsername);
-insert into resource_parameters(id, name, value) values(@resourceId, 'password', @resourcePassword);
+insert into resource_parameters(id, name, value) values(@resourceId, 'username', @userName);
+insert into resource_parameters(id, name, value) values(@resourceId, 'password', @password);
 
 -- SET THE RESOURCE PREDICATES
 set @predicatetype_AFL = (select IFNULL(max(id), 1) from PredicateType) + 1;

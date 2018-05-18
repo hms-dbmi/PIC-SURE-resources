@@ -1,8 +1,8 @@
 -- SET THE RESOURCE PARAMETERS
 set @resourceName = IFNULL(@resourceName,'{{gnome_resource_name}}');
 set @resourceURL = IFNULL(@resourceURL,'{{gnome_resource_url}}');
-set @gnomeUserName = IFNULL(@gnomeUserName,'{{gnome_user_name}}');
-set @gnomePassword = IFNULL(@gnomePassword,'{{gnome_password}}');
+set @userName = IFNULL(@userName,'{{gnome_user_name}}');
+set @password = IFNULL(@password,'{{gnome_password}}');
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.gnome.GNomeResourceImplementation';
 set @resourceOntology = 'TREE';
 
@@ -15,8 +15,8 @@ insert into `Resource`(`id`, `implementingInterface`, `name`, `ontologyType`) va
 -- INSERT THE RESOURCE PARAMERTERS
 insert into `resource_parameters`(`id`, `name`, `value`) values(@resourceId, 'resourceName', @resourceName);
 insert into `resource_parameters`(`id`, `name`, `value`) values(@resourceId, 'resourceRootURL', @resourceURL);
-insert into `resource_parameters`(`id`, `name`, `value`) values(@resourceId, 'gnomeUserName', @gnomeUserName);
-insert into `resource_parameters`(`id`, `name`, `value`) values(@resourceId, 'gnomePassword', @gnomePassword);
+insert into `resource_parameters`(`id`, `name`, `value`) values(@resourceId, 'gnomeUserName', @userName);
+insert into `resource_parameters`(`id`, `name`, `value`) values(@resourceId, 'gnomePassword', @password);
 
 -- INSERT THE RESOURCE DATATYPES
 insert into Resource_dataTypes(Resource_id, datatypes) values(@resourceId, 'edu.harvard.hms.dbmi.bd2k.irct.model.resource.PrimitiveDataType:STRING');

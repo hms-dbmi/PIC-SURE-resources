@@ -1,9 +1,13 @@
 -- Set the resource parameters
 set @resourceName := IFNULL(@resourceName, '{{resourceName}}');
-set @resourceURL = IFNULL(@resourceURL,'{{resourceURL}}');
-set @domain = IFNULL(@domain,'{{domain}}');
-set @userName = IFNULL(@userName,'{{userName}}');
-set @password = IFNULL(@password,'{{password}}');
+-- parameter, i2b2-wildfly URL
+set @resourceURL = IFNULL(@resourceURL,'http://i2b2-wildfly:9090/i2b2/services/');
+-- parameter, domain for i2b2 resource
+set @domain = IFNULL(@domain,'i2b2demo');
+-- parameter, i2b2 user
+set @userName = IFNULL(@userName,'demo');
+-- parameter, i2b2 user password
+set @password = IFNULL(@password,'demouser');
 set @ignoreCertificate = 'false';
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2.I2B2XMLOnlyCountRI';
