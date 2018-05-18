@@ -2,11 +2,10 @@
 set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{ resourceName }}', @resourceName);
 set @resourceURL = IF( IFNULL(@resourceURL, '') = '', '{{ scidb_url }}', @resourceURL);
 set @userName = IF( IFNULL(@userName, '') = '', '{{ username }}', @userName);
-set @password = IF( IFNULL(@password, '') = '', '{{ password }}', @password)
+set @password = IF( IFNULL(@password, '') = '', '{{ password }}', @password);
 
 -- Set the resource variables
 set @resourceId = (select IF(id is NULL,0,max(id)) from Resource) + 1;
-
 insert into Resource(id, implementingInterface, name, ontologyType) values(@resourceId,
 	'edu.harvard.hms.dbmi.bd2k.irct.ri.scidb.SciDBAFLResourceImplementation',
 	@resourceName,
