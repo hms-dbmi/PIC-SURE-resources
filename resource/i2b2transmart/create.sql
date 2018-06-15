@@ -1,13 +1,21 @@
+
 -- Set the resource parameters
--- These are now set in init-db script
--- set @resourceName = '${IRCT_RESOURCE_NAME}';
--- set @transmartURL = 'http://i2b2transmart:8080/transmart';
--- set @resourceURL = 'http://i2b2transmart:8080/transmart/proxy?url=http://i2b2-wildfly:9090/i2b2/services/';
-set @domain = 'i2b2demo';
-set @userName = 'Demo';
-set @password = 'demouser';
--- set @auth0ClientId = '${IRCT_AUTH0_CLIENT_ID}';
--- set @auth0Domain = '${IRCT_AUTH0_DOMAIN}';
+set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{resourceName}}', @resourceName);
+-- parameter, i2b2transmart URL
+set @transmartURL = IF( IFNULL(@transmartURL, '') = '', 'http://i2b2transmart:8080/transmart', @transmartURL);
+-- parameter, i2b2-wildfly URL
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', 'http://i2b2transmart:8080/transmart/proxy?url=http://i2b2-wildfly:9090/i2b2/services/', @resourceURL);
+-- parameter, domain for i2b2 resource
+set @domain = IF( IFNULL(@domain, '') = '', 'i2b2demo', @domain);
+-- parameter, i2b2 user
+set @userName = IF( IFNULL(@userName, '') = '', 'demo', @userName);
+-- parameter, i2b2 user password
+set @password = IF( IFNULL(@password, '') = '', 'demouser', @password);
+-- parameter, auth0 Client ID
+set @auth0ClientId = IF( IFNULL(@auth0ClientId, '') = '', '{{auth0clientid}}', @auth0ClientId);
+-- paramter, auth0 Domain
+set @auth0Domain = IF( IFNULL(@auth0Domain, '') = '', '{{auth0domain}}', @auth0Domain);
+
 set @ignoreCertificate = 'false';
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2transmart.I2B2TranSMARTResourceImplementation';

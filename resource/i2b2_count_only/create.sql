@@ -1,9 +1,13 @@
 -- Set the resource parameters
-set @resourceName = '{{resourceName}}';
-set @resourceURL = '{{resourceURL}}';
-set @domain = '{{domain}}';
-set @userName = '{{userName}}';
-set @password = '{{password}}';
+set @resourceName := IF( IFNULL(@resourceName, '') = '',  '{{resourceName}}', @resourceName);
+-- parameter, i2b2-wildfly URL
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', 'http://i2b2-wildfly:9090/i2b2/services/', @resourceURL);
+-- parameter, domain for i2b2 resource
+set @domain = IF( IFNULL(@domain, '') = '', 'i2b2demo', @domain);
+-- parameter, i2b2 user
+set @userName = IF( IFNULL(@userName, '') = '', 'demo', @userName);
+-- parameter, i2b2 user password
+set @password = IF( IFNULL(@password, '') = '', 'demouser', @password);
 set @ignoreCertificate = 'false';
 
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.i2b2.I2B2XMLOnlyCountRI';
@@ -44,11 +48,11 @@ insert into Resource(id, implementingInterface, name, ontologyType) values(@reso
 -- INSERT THE RESOURCE PARAMERTERS
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceName', @resourceName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @resourceURL);
-insert into resource_parameters(id, name, value) values(@resourceId, 'transmartURL', @transmartURL);
 insert into resource_parameters(id, name, value) values(@resourceId, 'domain', @domain);
 insert into resource_parameters(id, name, value) values(@resourceId, 'username', @userName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'password', @password);
 insert into resource_parameters(id, name, value) values(@resourceId, 'ignoreCertificate', @ignoreCertificate);
+-- TODO: should these be parameterized? - Andre
 insert into resource_parameters(id, name, value) values(@resourceId, 'clientId', @auth0ClientId);
 insert into resource_parameters(id, name, value) values(@resourceId, 'namespace', @auth0Domain);
 

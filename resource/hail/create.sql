@@ -1,5 +1,5 @@
-set @resourceName = '{{ resourceName }}';
-set @resourceURL = '{{ resourceURL}}';
+set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{ resourceName }}', @resourceName);
+set @resourceURL = IF( IFNULL(@resourceURL, '') = '', '{{ resourceURL}}', @resourceURL);
 
 -- SET THE RESOURCE VARIABLE
 set @resourceId = (select IFNULL(max(id), 1) from Resource) + 1;
@@ -9,7 +9,7 @@ insert into Resource(id, implementingInterface, name, ontologyType) VALUES
 -- INSERT THE RESOURCE PARAMERTERS
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceName', @resourceName);
 insert into resource_parameters(id, name, value) values(@resourceId, 'resourceURL', @resourceURL);
-	
+
 -- SET THE RESOURCE PREDICATES
 -- set @predicatetype_SUMMARY = (select IFNULL(max(id), 1) from PredicateType) + 1;
 -- insert into PredicateType(id, defaultPredicate, description, displayName, name) VALUES
@@ -50,8 +50,3 @@ set @field_id = (select NULLIF(max(id), 0) from Field) + 1;
 insert into Field(id, description, name, path, required, relationship) VALUES
   (@field_id, 'Filter Samples Expressions', 'FltrSamplExpr', 'filter_samples_expr',0,NULL );
 insert into PredicateType_Field(PredicateType_id, fields_id) values (@predicatetype_TEMPLATE, @field_id);
-
-
-
-
-
