@@ -1,6 +1,6 @@
 -- SET THE RESOURCE PARAMETERS
 set @resourceName = IF( IFNULL(@resourceName, '') = '', '{{gnome_resource_name}}', @resourceName);
-set @resourceRootURL = IF( IFNULL(@resourceURL, '') = '', '{{gnome_resource_url}}', @resourceURL);
+set @resourceRootURL = IF( IFNULL(@resourceRootURL, '') = '', '{{gnome_resource_url}}', @resourceRootURL);
 set @userName = IF( IFNULL(@userName, '') = '', '{{gnome_user_name}}', @userName);
 set @password = IF( IFNULL(@password, '') = '', '{{gnome_password}}', @password);
 set @resourceImplementingInterface = 'edu.harvard.hms.dbmi.bd2k.irct.ri.gnome.GNomeResourceImplementation';
