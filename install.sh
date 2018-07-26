@@ -219,7 +219,7 @@ if [[ "${resource}" =~ ^i2b2transmart\-(.+)$ ]]; then
             SET @auth0Domain='${auth0domain}'; \
             SET @transmartURL='${resourceurl}'; \
             SET @resourceURL='${resourceurl}/transmart/proxy?url=http://localhost:9090/i2b2/services/'; \
-            source /scratch/irct/sql/resource/i2b2transmart/create.sql;"
+            source ./resource/i2b2transmart/create.sql;"
 
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
@@ -235,7 +235,7 @@ if [[ "${resource}" =~ ^i2b2transmart\-(.+)$ ]]; then
                 mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
                 "SET @resourceName='${specificName}'; \
                 SET @S3BucketName='${bucket}'; \
-                source /scratch/irct/sql/event/AWS-S3.sql;"
+                source ./event/AWS-S3.sql;"
 
                 echo "confirm S3 Bucket added"
                 mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
@@ -305,7 +305,7 @@ if [[ "${resource}" =~ scidb\-(.+)$ ]]; then
             SET @resourceURL='${resourceurl}'; \
             SET @userName='${resourceuser}'; \
             SET @password='${resourcepass}'; \
-            source /scratch/irct/sql/resource/${resourcetype}/create.sql;"
+            source ./resource/${resourcetype}/create.sql;"
 
             echo "confirm IRCT DB populated"
             mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
@@ -323,7 +323,7 @@ if [ "${resource}" == "i2b2.org" ]; then
         echo "i2b2.org resource already exists"
     else
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
-            "source /scratch/irct/sql/resource/i2b2passthrough/create.sql;"
+            "source ./resource/i2b2passthrough/create.sql;"
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
     fi
@@ -353,7 +353,7 @@ if [[ "${resource}" =~ ^i2b2\-wildfly\-(.+)$ ]]; then
             SET @domain='${resourcedomain}'; \
             SET @userName='${resourceuser}'; \
             SET @password='${resourcepass}'; \
-            source /scratch/irct/sql/resource/${resourcetype}/create.sql;"
+            source ./resource/${resourcetype}/create.sql;"
 
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
