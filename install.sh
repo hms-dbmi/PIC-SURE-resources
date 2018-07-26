@@ -21,6 +21,7 @@ usage() {
     echo "  i2b2.org"
     echo "  dataconverters"
     echo "  monitor"
+    echo "  capitalization"
     echo ""
     echo "Options:"
     echo "  --delete  true|false        delete resource"
@@ -50,6 +51,7 @@ usage() {
     echo "  hail"
     echo "  gnome"
     echo "  exac"
+    echo "  umls"
     echo ""
 
     if [ "$1" ]; then
@@ -77,9 +79,9 @@ param() {
     esac
 }
 
-host=${IRCTMYSQLADDRESS}
+host=${IRCT_DB_HOST}
 user=${IRCT_DB_CONNECTION_USER}
-pass=${IRCTMYSQLPASS}
+pass=${IRCT_DB_PASSWORD}
 db=irct
 
 simple=false
@@ -359,11 +361,45 @@ if [[ "${resource}" =~ ^i2b2\-wildfly\-(.+)$ ]]; then
 
 fi
 # end i2b2 local resource
+
+
+# Capitalization
+if [ "${resource}" == "capitalization" ]; then
+
+    count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM EventConverterImplementation WHERE name LIKE 'Capitalization%';"`
+    if [ ${count} -gt 0 ]; then
+        echo "Capitalization configuration already exists"
+    else
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/event/Capitalization.sql
+
+        echo "confirm Capitalization added"
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+          "SELECT * FROM EventConverterImplementation WHERE name LIKE 'Capitalization%';"
+    fi
+
+
+fi
+# end Capitalization
+
+# UMLS Synonyms
+# NOTE: Incomplete. Requires handling parameters: connection string, username, password
+if [ "${resource}" == "umls" ]; then
+
+    count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM EventConverterImplementation WHERE name LIKE 'UMLS%';"`
+    if [ ${count} -gt 0 ]; then
+        echo "UMLS Synonyms configuration already exists"
+    else
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/event/UMLSSynonym.sql
+
+        echo "confirm UMLS Synonyms added"
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+          "SELECT * FROM EventConverterImplementation WHERE name LIKE 'UMLS%';"
+    fi
+
+
+fi
+# end UMLS Synonyms
+
 } || {
     exit $?
 }
-
-
-
-
-# TODO: Add UMLS Synonym and Capitalization initalization options
