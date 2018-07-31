@@ -392,7 +392,7 @@ fi
 if [ "${resource}" == "aws" ]; then
 
     # Added extra character. bash can act weird with -n on empty strings
-    if [ "x${bucket}" != "x" ]; then
+    if [ "x${bucket}" == "x" ]; then
         usage "ERROR: [required] --bucket NAME"
     fi
 
