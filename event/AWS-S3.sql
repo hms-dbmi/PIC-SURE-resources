@@ -7,8 +7,14 @@ insert into EventConverterImplementation(id, eventListener, name) values(@S3Afte
 insert into event_parameters(id, name, value) values(@S3BeforeGetResultId, 'Bucket Name', @S3BucketName);
 insert into event_parameters(id, name, value) values(@S3AfterSaveResultId, 'Bucket Name', @S3BucketName);
 
-insert into event_parameters(id, name, value) values(@S3BeforeGetResultId, 'resultDataFolder', '/scratch/irct');
-insert into event_parameters(id, name, value) values(@S3AfterSaveResultId, 'resultDataFolder', '/scratch/irct');
+-- default IRCT result data directory
+set @resultDataFolder = IF( IFNULL(@resultDataFolder, '') = '', '/scratch/irct', @resultDataFolder);
+
+insert into event_parameters(id, name, value) values(@S3BeforeGetResultId, 'resultDataFolder', @resultDataFolder);
+insert into event_parameters(id, name, value) values(@S3AfterSaveResultId, 'resultDataFolder', @resultDataFolder);
+
+-- default S3 folder directory
+set @resourceName = IF( IFNULL(@resourceName, '') = '', 'default', @resourceName);
 
 insert into event_parameters(id, name, value) values(@S3BeforeGetResultId, 's3Folder', concat('tmp/IRCT/', @resourceName, '/result/'));
 insert into event_parameters(id, name, value) values(@S3AfterSaveResultId, 's3Folder', concat('tmp/IRCT/', @resourceName, '/result/'));

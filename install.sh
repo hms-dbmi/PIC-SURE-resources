@@ -22,6 +22,8 @@ usage() {
     echo "  dataconverters"
     echo "  monitor"
     echo "  capitalization"
+    echo "  aws"
+    echo ""
     echo ""
     echo "Options:"
     echo "  --delete  true|false        delete resource"
@@ -32,7 +34,6 @@ usage() {
     echo "  --resource-url URL          [required] i2b2transmart URL"
     echo "  --auth0-id CLIENT_ID        [required] Auth0 Client Id"
     echo "  --auth0-domain DOMAIN       [required] Auth0 Domain"
-    echo "  --bucket NAME               AWS S3 bucket"
     echo ""
     echo "  i2b2-wildfly-NAME:"
     echo "  --simple true|false         count only install [default: false]"
@@ -46,6 +47,9 @@ usage() {
     echo "  --resource-user USER        [required] SciDB user"
     echo "  --resource-pass PASSWORD    [required] SciDB password"
     echo "  --afl-enabled true|false    use SciDB's Array Functional Language [default: false]"
+    echo ""
+    echo "  aws:"
+    echo "  --bucket NAME               [required] AWS S3 bucket"
     echo ""
     echo "Unavailable Resources:"
     echo "  hail"
@@ -224,25 +228,6 @@ if [[ "${resource}" =~ ^i2b2transmart\-(.+)$ ]]; then
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM resource_parameters WHERE name = 'resourceURL';"
-        # AWS S3 bucket
-        # Added extra character. bash can act weird with -n on empty strings
-        if [ "x${bucket}" != x ]; then
-
-            count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM event_parameters WHERE name='Bucket Name';"`
-            if [ ${count} -gt 0 ]; then
-                echo "AWS S3 Bucket configuration already exists"
-            else
-                mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
-                "SET @resourceName='${specificName}'; \
-                SET @S3BucketName='${bucket}'; \
-                source ./event/AWS-S3.sql;"
-
-                echo "confirm S3 Bucket added"
-                mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
-                "SELECT * FROM event_parameters WHERE name='Bucket Name';"
-            fi
-        fi
-        # end AWS S3 bucket
     fi
 fi
 # end I2B2Transmart
@@ -255,7 +240,7 @@ if [ "${resource}" == "monitor" ]; then
     if [ ${count} -gt 0 ]; then
         echo "Monitor configuration already exists"
     else
-        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/event/Monitoring.sql
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < ./event/Monitoring.sql
 
         echo "confirm Monitor added"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
@@ -274,7 +259,7 @@ if [ "${resource}" == "dataconverters" ]; then
     if [ ${count} -gt 0 ]; then
         echo "Data Converters already exist"
     else
-        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/config/ResultDataConverters.sql
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < ./config/ResultDataConverters.sql
         echo "confirm Data Converters added"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
           "SELECT * FROM DataConverterImplementation;"
@@ -400,6 +385,32 @@ if [ "${resource}" == "umls" ]; then
 fi
 # end UMLS Synonyms
 
+
+# AWS S3 bucket
+# NOTE: @resourceName and @resultDataFolder are configurable but we just use the defaults
+# installing AWS S3 will *not* work if you choose to change the Result Data Folder in IRCT application - Andre
+if [ "${resource}" == "aws" ]; then
+
+    # Added extra character. bash can act weird with -n on empty strings
+    if [ "x${bucket}" != "x" ]; then
+        usage "ERROR: [required] --bucket NAME"
+    fi
+
+    count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM event_parameters WHERE name='Bucket Name';"`
+    if [ ${count} -gt 0 ]; then
+        echo "AWS S3 Bucket configuration already exists"
+    else
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+        "SET @S3BucketName='${bucket}'; \
+        source ./event/AWS-S3.sql;"
+
+        echo "confirm S3 Bucket added"
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+        "SELECT * FROM event_parameters WHERE name='Bucket Name';"
+    fi
+fi
+
+# end AWS S3 bucket
 } || {
     exit $?
 }
