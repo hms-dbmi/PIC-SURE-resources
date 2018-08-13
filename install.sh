@@ -7,9 +7,9 @@ usage() {
     echo "  $0 -h|--help"
     echo ""
     echo "Database Args:"
-    echo "  -h, --host HOST             database host [default: \$IRCTMYSQLADDRESS]"
+    echo "  -h, --host HOST             database host [default: \$IRCT_DB_HOST]"
     echo "  -u, --user USER             database user [default: \$IRCT_DB_CONNECTION_USER]"
-    echo "  -p, --password PASSWORD     database password [default: \$IRCTMYSQLPASS]"
+    echo "  -p, --password PASSWORD     database password [default: \$IRCT_DB_PASSWORD]"
     echo ""
     echo "Resources:"
     echo "  -r, --resource TYPE         resource to install"
@@ -21,6 +21,9 @@ usage() {
     echo "  i2b2.org"
     echo "  dataconverters"
     echo "  monitor"
+    echo "  capitalization"
+    echo "  aws"
+    echo ""
     echo ""
     echo "Options:"
     echo "  --delete  true|false        delete resource"
@@ -31,7 +34,6 @@ usage() {
     echo "  --resource-url URL          [required] i2b2transmart URL"
     echo "  --auth0-id CLIENT_ID        [required] Auth0 Client Id"
     echo "  --auth0-domain DOMAIN       [required] Auth0 Domain"
-    echo "  --bucket NAME               AWS S3 bucket"
     echo ""
     echo "  i2b2-wildfly-NAME:"
     echo "  --simple true|false         count only install [default: false]"
@@ -46,10 +48,14 @@ usage() {
     echo "  --resource-pass PASSWORD    [required] SciDB password"
     echo "  --afl-enabled true|false    use SciDB's Array Functional Language [default: false]"
     echo ""
+    echo "  aws:"
+    echo "  --bucket NAME               [required] AWS S3 bucket"
+    echo ""
     echo "Unavailable Resources:"
     echo "  hail"
     echo "  gnome"
     echo "  exac"
+    echo "  umls"
     echo ""
 
     if [ "$1" ]; then
@@ -77,9 +83,9 @@ param() {
     esac
 }
 
-host=${IRCTMYSQLADDRESS}
+host=${IRCT_DB_HOST}
 user=${IRCT_DB_CONNECTION_USER}
-pass=${IRCTMYSQLPASS}
+pass=${IRCT_DB_PASSWORD}
 db=irct
 
 simple=false
@@ -217,30 +223,11 @@ if [[ "${resource}" =~ ^i2b2transmart\-(.+)$ ]]; then
             SET @auth0Domain='${auth0domain}'; \
             SET @transmartURL='${resourceurl}'; \
             SET @resourceURL='${resourceurl}/transmart/proxy?url=http://localhost:9090/i2b2/services/'; \
-            source /scratch/irct/sql/resource/i2b2transmart/create.sql;"
+            source ./resource/i2b2transmart/create.sql;"
 
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM resource_parameters WHERE name = 'resourceURL';"
-        # AWS S3 bucket
-        # Added extra character. bash can act weird with -n on empty strings
-        if [ "x${bucket}" != x ]; then
-
-            count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM event_parameters WHERE name='Bucket Name';"`
-            if [ ${count} -gt 0 ]; then
-                echo "AWS S3 Bucket configuration already exists"
-            else
-                mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
-                "SET @resourceName='${specificName}'; \
-                SET @S3BucketName='${bucket}'; \
-                source /scratch/irct/sql/event/AWS-S3.sql;"
-
-                echo "confirm S3 Bucket added"
-                mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
-                "SELECT * FROM event_parameters WHERE name='Bucket Name';"
-            fi
-        fi
-        # end AWS S3 bucket
     fi
 fi
 # end I2B2Transmart
@@ -253,7 +240,7 @@ if [ "${resource}" == "monitor" ]; then
     if [ ${count} -gt 0 ]; then
         echo "Monitor configuration already exists"
     else
-        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/event/Monitoring.sql
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < ./event/Monitoring.sql
 
         echo "confirm Monitor added"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
@@ -272,7 +259,7 @@ if [ "${resource}" == "dataconverters" ]; then
     if [ ${count} -gt 0 ]; then
         echo "Data Converters already exist"
     else
-        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/config/ResultDataConverters.sql
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < ./config/ResultDataConverters.sql
         echo "confirm Data Converters added"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
           "SELECT * FROM DataConverterImplementation;"
@@ -303,7 +290,7 @@ if [[ "${resource}" =~ scidb\-(.+)$ ]]; then
             SET @resourceURL='${resourceurl}'; \
             SET @userName='${resourceuser}'; \
             SET @password='${resourcepass}'; \
-            source /scratch/irct/sql/resource/${resourcetype}/create.sql;"
+            source ./resource/${resourcetype}/create.sql;"
 
             echo "confirm IRCT DB populated"
             mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
@@ -321,7 +308,7 @@ if [ "${resource}" == "i2b2.org" ]; then
         echo "i2b2.org resource already exists"
     else
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
-            "source /scratch/irct/sql/resource/i2b2passthrough/create.sql;"
+            "source ./resource/i2b2passthrough/create.sql;"
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
     fi
@@ -351,7 +338,7 @@ if [[ "${resource}" =~ ^i2b2\-wildfly\-(.+)$ ]]; then
             SET @domain='${resourcedomain}'; \
             SET @userName='${resourceuser}'; \
             SET @password='${resourcepass}'; \
-            source /scratch/irct/sql/resource/${resourcetype}/create.sql;"
+            source ./resource/${resourcetype}/create.sql;"
 
         echo "confirm IRCT DB populated"
         mysql --host=${host} --user=${user} --password=${pass} ${db}  -e "SELECT * FROM Resource"
@@ -359,11 +346,71 @@ if [[ "${resource}" =~ ^i2b2\-wildfly\-(.+)$ ]]; then
 
 fi
 # end i2b2 local resource
+
+
+# Capitalization
+if [ "${resource}" == "capitalization" ]; then
+
+    count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM EventConverterImplementation WHERE name LIKE 'Capitalization%';"`
+    if [ ${count} -gt 0 ]; then
+        echo "Capitalization configuration already exists"
+    else
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/event/Capitalization.sql
+
+        echo "confirm Capitalization added"
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+          "SELECT * FROM EventConverterImplementation WHERE name LIKE 'Capitalization%';"
+    fi
+
+
+fi
+# end Capitalization
+
+# UMLS Synonyms
+# NOTE: Incomplete. Requires handling parameters: connection string, username, password
+if [ "${resource}" == "umls" ]; then
+
+    count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM EventConverterImplementation WHERE name LIKE 'UMLS%';"`
+    if [ ${count} -gt 0 ]; then
+        echo "UMLS Synonyms configuration already exists"
+    else
+        mysql --host=${host} --user=${user} --password=${pass}  ${db}  < /scratch/irct/sql/event/UMLSSynonym.sql
+
+        echo "confirm UMLS Synonyms added"
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+          "SELECT * FROM EventConverterImplementation WHERE name LIKE 'UMLS%';"
+    fi
+
+
+fi
+# end UMLS Synonyms
+
+
+# AWS S3 bucket
+# NOTE: @resourceName and @resultDataFolder are configurable but we just use the defaults
+# installing AWS S3 will *not* work if you choose to change the Result Data Folder in IRCT application - Andre
+if [ "${resource}" == "aws" ]; then
+
+    # Added extra character. bash can act weird with -n on empty strings
+    if [ "x${bucket}" == "x" ]; then
+        usage "ERROR: [required] --bucket NAME"
+    fi
+
+    count=`mysql --host=${host} --user=${user} --password=${pass} ${db} -ss -e "SELECT COUNT(*) FROM event_parameters WHERE name='Bucket Name';"`
+    if [ ${count} -gt 0 ]; then
+        echo "AWS S3 Bucket configuration already exists"
+    else
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+        "SET @S3BucketName='${bucket}'; \
+        source ./event/AWS-S3.sql;"
+
+        echo "confirm S3 Bucket added"
+        mysql --host=${host} --user=${user} --password=${pass} ${db}  -e \
+        "SELECT * FROM event_parameters WHERE name='Bucket Name';"
+    fi
+fi
+
+# end AWS S3 bucket
 } || {
     exit $?
 }
-
-
-
-
-# TODO: Add UMLS Synonym and Capitalization initalization options
