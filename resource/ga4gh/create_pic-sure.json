@@ -1,0 +1,6 @@
+{
+	"name": "ga4gh",
+	"description": "ga4gh DOS API server",
+	"targetURL": "http://ga4gh-dos-app.hms.harvard.edu/picsure",
+	"resourceRSPath": "http://localhost:8080/pic-sure-external-resource/pic-sure/"
+}
